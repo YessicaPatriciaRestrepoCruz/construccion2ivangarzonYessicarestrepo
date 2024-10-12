@@ -43,9 +43,9 @@ public class UserDaoImplementation implements UserDao {
     }
 
     @Override
-    public void deleteUser(UserDto userDto) throws Exception {
-        User user = Helper.parse(userDto);
-        userRepository.delete(user);
+    public void deleteUser( Long id) throws Exception {
+        
+        userRepository.deleteById(id);
         
     }
 
@@ -56,9 +56,8 @@ public UserDto findUserById(long id) throws Exception {
     return Helper.parse(user);
     
 }
-
-// @Override organizar
  
+    @Override
     public UserDto findByPersonId( PersonDto personDto ) throws Exception {
         Person person = Helper.parse( personDto );
         User user = this.userRepository.findByPersonnId( person );
@@ -73,6 +72,8 @@ public UserDto findUserById(long id) throws Exception {
     public UserDto findByUserName(UserDto userDto) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+   
 
   
 

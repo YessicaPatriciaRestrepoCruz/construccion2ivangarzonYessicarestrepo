@@ -27,6 +27,7 @@ public class LoginController implements ControllerInterface {
         "2. Para detener la ejecución.";
     private Map<String, ControllerInterface> roles; 
 
+        @Autowired
      public  LoginController (AdminController adminController,MemberController memberController, GuestController guestController ) {
         
 

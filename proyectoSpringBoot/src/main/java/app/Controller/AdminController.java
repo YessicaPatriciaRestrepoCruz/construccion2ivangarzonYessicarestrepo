@@ -4,7 +4,10 @@ package app.Controller;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+
 
 
 @Controller
@@ -13,10 +16,17 @@ import org.springframework.stereotype.Controller;
 @NoArgsConstructor
 public class AdminController implements ControllerInterface {
     
-    public ControllerInterface PersonController = new PersonController();
-    public ControllerInterface UserController = new UserController();
-    public ControllerInterface memberController = new MemberController();
-    public ControllerInterface GuestController = new GuestController();
+     @Autowired
+    private PersonController personController;
+    
+    @Autowired
+    private UserController userController;
+    
+    @Autowired
+    private MemberController memberController;
+    
+    @Autowired
+    private GuestController guestController;
     
     
    
@@ -53,17 +63,17 @@ public class AdminController implements ControllerInterface {
     private boolean options(String option) throws Exception {
         switch (option) {
             case "1":
-                this.PersonController.session();
+                this.personController.session();
                 return true;
             case "2":
-                this.UserController.session();
+                this.userController.session();
                 return true;
                 
             case "3":
                 this.memberController.session();
                 return true;
             case "4":
-                this.GuestController.session();
+                guestController.session();
                 return true;
             
             case "5":

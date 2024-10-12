@@ -9,13 +9,14 @@ import lombok.Setter;
 @Getter // verificar todos los nombres deben ser igual a la tabla 
 @Setter
 public class MemberDto {
-    private long Id;
+    private long id;
     private Long userId;
     private double amount;
     private String type;
     private Date affiliationDate;
 
     // cambiar las variables comoe sta en la tabla
+    
    
 }
 

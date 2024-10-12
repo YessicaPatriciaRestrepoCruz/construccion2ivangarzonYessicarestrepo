@@ -1,5 +1,6 @@
 package app.service;
 
+import app.Controller.Validator.MemberValidator;
 import app.Dao.Interfaces.MemberDao;
 import app.Dto.MemberDto;
 import app.service.Interface.MemberServiceInterface;
@@ -18,14 +19,23 @@ public class MemberService implements MemberServiceInterface {
 @Autowired 
     private MemberDao memberDao;
 
-    @Override
-    public void createMember(MemberDto memberDto) throws Exception {
-       
-        if (memberDao.findMemberById(memberDto.getId()) != null) {
+@Autowired
+    private MemberValidator memberValidator;
+
+
+@Override
+ public void createMember(MemberDto memberDto) throws Exception {
+     
+         if (memberDao.findMemberById(memberDto.getId()) != null) {
             throw new Exception("El miembro con ID " + memberDto.getId() + " ya existe.");
         }
+
+        memberValidator.validateAmount(memberDto.getAmount());
+        memberValidator.validateType(memberDto.getType());
+        
         memberDao.createMember(memberDto);
     }
+
 
     @Override
     public MemberDto getMemberById(long id) throws Exception {
@@ -39,7 +49,7 @@ public class MemberService implements MemberServiceInterface {
     @Override
     public List<MemberDto> getAllMembers() throws Exception {
         
-        throw new UnsupportedOperationException("");
+         return memberDao.getAllMember();
     }
 
     @Override
@@ -49,6 +59,10 @@ public class MemberService implements MemberServiceInterface {
         if (existingMember == null) {
             throw new Exception("Miembro no encontrado con ID " + memberDto.getId());
         }
+        
+        
+        memberValidator.validateAmount(memberDto.getAmount());
+        memberValidator.validateType(memberDto.getType());
         memberDao.updateMember(memberDto);
     }
 
@@ -59,5 +73,5 @@ public class MemberService implements MemberServiceInterface {
             throw new Exception("Miembro no encontrado con ID " + id);
         }
         memberDao.deleteMember(existingMember);
-    } // revisar 
+    }  
 }

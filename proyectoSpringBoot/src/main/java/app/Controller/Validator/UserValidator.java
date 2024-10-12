@@ -15,16 +15,16 @@ public class UserValidator extends CommonsValidator {
     
  
     public void validateUserName(String userName) throws Exception {
-        isValidString("Username", userName);
-        
+        isValidString("Nombre de usuario", userName);
     }
     
-    // Valida la contraseña
     public void validatePassword(String password) throws Exception {
-        isValidString("Password", password);
-       
+        if (password == null || password.length() < 6) {
+            throw new Exception("La contraseña debe tener al menos 6 caracteres.");
+        }
     }
     
+   
   
     public void validateRole(String role) throws Exception {
         isValidString("Role", role);

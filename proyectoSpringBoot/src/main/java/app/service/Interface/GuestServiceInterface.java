@@ -6,15 +6,13 @@ import java.util.List;
 
 public interface GuestServiceInterface {
     
-    public void addGuest(GuestDto guestDto) throws Exception;
-    public void addGuest( ) throws Exception;
+    public void createGuest(GuestDto guestDto) throws Exception;
 
     GuestDto getGuestById(long id) throws Exception;
     List<GuestDto> getAllGuests() throws Exception;
-    void updateGuest(GuestDto guestDto) throws Exception;
-    public void updateGuest( ) throws Exception;
+    public void updateGuest(GuestDto guestDto) throws Exception;
 
-    void deleteGuest() throws Exception;
+    void deleteGuest(long id) throws Exception;
     // CREAR FACTURA
     //SOLICITAR CAMBIO A SOCIO
 }

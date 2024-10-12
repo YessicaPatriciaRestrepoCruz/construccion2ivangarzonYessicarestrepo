@@ -1,11 +1,8 @@
 package app.service;
 
 
+import app.Controller.Validator.GuestValidator;
 import app.Dto.GuestDto;
-import app.Dto.MemberDto;
-import app.Dto.PersonDto;
-import app.Dto.UserDto;
-import app.helpers.Helper;
 import app.service.Interface.GuestServiceInterface;
 import appp.Dao.GuestDaoImplementation;
 import appp.Dao.InvoiceDaoImplementation;
@@ -17,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service; 
 
 @Getter
 @Setter
@@ -41,86 +38,38 @@ public class GuestService implements GuestServiceInterface {
     @Autowired
     private final UserService userService = new UserService();
     
-    
+     @Autowired
+    private GuestValidator guestValidator;
     
     @Autowired
     private final MemberDaoImplementation memberDao = new MemberDaoImplementation();
     
-    @Override
-    public void addGuest() throws Exception {
+    
        
-        UserDto userDtoLocate = this.userService.createUserGuest();
-
-        if ( userDtoLocate == null ) {
-            throw new Exception("No se encontró ningún usuario");            
-        }
-
-        PersonDto personDto = new PersonDto();
-        personDto.getPersonDocumentDto( "Ingrese el documento del socio que invita" );
-        personDto = this.personDao.findByDocument(personDto);
-        if ( personDto == null ) {
-            throw new Exception("No se encontró ningúna persona con el numero de identificación");            
-        }
+         @Override
+    public void createGuest(GuestDto guestDto) throws Exception {
         
-        UserDto userDtoInvite = this.userDao.findByPersonId( personDto );
-        MemberDto partnerDto = this.memberDao.findByUserId( userDtoInvite );
-        if ( partnerDto == null ) {
-            throw new Exception( personDto.getName() + " no es socio del club");            
-        }
-                
-        GuestDto guestDto = new GuestDto();
-        guestDto.setUserId( Helper.parse( userDtoLocate ) );
-        guestDto.setMemberId(Helper.parse(partnerDto));
-        guestDto.setStatus("ACTIVO" );
-        
-        this.guestDao.createGuest( guestDto );
-    }   
+        guestValidator.validateUser(guestDto.getUserId());
+        guestValidator.validateMember(guestDto.getMemberId());
+        guestValidator.validateStatus(guestDto.getStatus());
+        guestDao.createGuest(guestDto);
+    }
+       
     
     @Override
-    public void deleteGuest() throws Exception {
+    public void deleteGuest(long id) throws Exception {
         
-        
-        PersonDto personDtoLocale = new PersonDto();
-        personDtoLocale.getDocument();
-        personDtoLocale = this.personDao.findByDocument( personDtoLocale );
-        
-        if ( personDtoLocale == null ){
-            throw new Exception("No existe la persona");
-        }
-        
-        
-        UserDto userDtoLocate = this.userDao.findByPersonId( personDtoLocale );
-        if ( userDtoLocate == null ) {
-            throw new Exception("No se encontró ningún usuario con el número de identificación ");            
-        }
-
-        GuestDto guestDto = this.guestDao.findByUserId( userDtoLocate );
-        
-        if ( guestDto == null ){
-            throw new Exception("No existe el invitado");                            
-        }
-        
-        this.guestDao.deleteGuest( guestDto );
+      guestDao.deleteGuest(id);
     }    
     
-
-    
-    
-    
-    
-    
-    
-    
-
     @Override
-    public void updateGuest() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void updateGuest(GuestDto guestDto) throws Exception {
+        guestValidator.validateUser(guestDto.getUserId());
+        guestValidator.validateMember(guestDto.getMemberId());
+        guestValidator.validateStatus(guestDto.getStatus());
+        guestDao.updateGuest(guestDto);
     }
-
-    @Override
-    public void addGuest(GuestDto guestDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
 
     @Override
     public GuestDto getGuestById(long id) throws Exception {
@@ -129,12 +78,7 @@ public class GuestService implements GuestServiceInterface {
 
     @Override
     public List<GuestDto> getAllGuests() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void updateGuest(GuestDto guestDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+          return guestDao.getAllGuest();
     }
 
    

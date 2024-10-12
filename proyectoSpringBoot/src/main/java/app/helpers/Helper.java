@@ -12,6 +12,8 @@ import app.Model.Guest;
 import app.Model.Invoice;
 import app.Dto.InvoiceDto;
 import app.Model.InvoiceDetail;
+import java.util.List;
+import java.util.stream.Collectors;
 public abstract class Helper {
 
 	
@@ -105,7 +107,7 @@ public abstract class Helper {
                 invoiceDto.setPersonId(parse(invoice.getPersonId()));
                 invoiceDto.setMemberId(parse(invoice.getMemberId()));
                 invoiceDto.setCreationDate(invoice.getCreationDate());
-                invoiceDto.setStatus(invoice.getStatus());
+                invoiceDto.setStatus(invoice.getStatus());  
                 invoiceDto.setAmount(invoice.getAmount());
                 
                 return invoiceDto; 
@@ -131,5 +133,12 @@ public abstract class Helper {
                 
                 return invoiceDetailDto; 
 }
+     
+     
+     public static List<GuestDto> parseGuests(List<Guest> guests) {
+        return guests.stream()
+                     .map(Helper::parse)
+                     .collect(Collectors.toList());
+    }
 }
 

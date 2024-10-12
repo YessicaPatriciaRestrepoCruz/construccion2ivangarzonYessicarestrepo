@@ -1,6 +1,8 @@
 package app.service;
 
  
+import app.Controller.Validator.UserValidator;
+import app.Dao.Interfaces.UserDao;
 import app.Dto.MemberDto;
 import app.Dto.PersonDto;
 import app.Dto.UserDto;
@@ -23,133 +25,53 @@ import org.springframework.stereotype.Service;
 
 public class UserService implements UserServiceInterface {
     
+       @Autowired
+    private UserDao userDao;
+       
+       @Autowired
+    private UserValidator userValidator;
+    
      @Autowired
     private final PersonService personService = new PersonService();
      
     @Autowired
     private final PersonDaoImplementation personDao = new PersonDaoImplementation();
     @Autowired
-    private final UserDaoImplementation userDao = new UserDaoImplementation();
+  
     
-    @Autowired
     private final MemberDaoImplementation memberDao = new MemberDaoImplementation();
-    
-    
-
-   
-    
-
-     @Override
-    public void createUser() throws Exception {
-        
-        UserDto userDto;
-        PersonDto personDto = this.personService.createPerson( );
-        
-        userDto = this.userDao.findByPersonId( personDto ) ;
-        
-        if ( userDto != null ){
-            throw new Exception("El usuario para: " + personDto.getName() + " es: " + userDto.getUserName() );
-        }
-        
-        userDto = new UserDto();
-        userDto.setPersonnId( Helper.parse( personDto ) );
-        
-        userDto.getUserNameDto();
-        userDto.getUserTypeDto();
-        userDto.getUserPasswordDto();
-                
-        if ( this.userDao.existsByUserName( userDto ) ) {
-            throw new Exception("Ya existe un usuario con ese user name");
-        }
-        
-        try {
-            this.userDao.createUser( userDto );
-        } catch (SQLException e) {
-            throw new Exception( e.getMessage() );
-        }
-        
-    }
 
     @Override
-    public UserDto getUserById(long id) throws Exception {
+    public void createUser(UserDto userDto) throws Exception {
         
-         return null;
-        
+        userValidator.validateUserName(userDto.getUserName());
+        userValidator.validatePassword(userDto.getPassword());
+        userValidator.validateRole(userDto.getRole());
+        userDao.createUser(userDto);
     }
 
     @Override
     public void updateUser(UserDto userDto) throws Exception {
         
-        
+        userValidator.validateUserName(userDto.getUserName());
+        userValidator.validatePassword(userDto.getPassword());
+        userValidator.validateRole(userDto.getRole());
+        userDao.updateUser(userDto);
     }
 
     @Override
-    public void deleteUser() throws Exception {
-        
-        UserDto userDto;
-        PersonDto personDto = new PersonDto();
-        personDto.getPersonDocumentDto();
-        
-        personDto = this.personDao.findByDocument( personDto );
-        if ( personDto == null ){
-            throw new Exception("La persona no existe" );
-        }
-
-        userDto = this.userDao.findByPersonId( personDto ) ;        
-        if ( userDto == null ){
-            throw new Exception("La persona no tiene usuario" );
-        }
-        
-        MemberDto partnerDto = this.memberDao.findByUserId( userDto );
-        
-        if ( partnerDto != null ){
-            throw new Exception("El usuario es socio" );            
-        }
-        
-        System.out.println("Borrar usuario: " + userDto.getUserName() );
-        
-        this.userDao.deleteUser( userDto );        
+    public void deleteUser(Long id) throws Exception {
+         userDao.deleteUser(id);
     }
-        
+
+    @Override
+    public UserDto getUserById(Long id) throws Exception {
+        return userDao.findUserById(id);
+
+    }
+    
     
 
-    @Override
-    public UserDto createUserGuest() throws Exception {
-        
-        UserDto userDto;
-        PersonDto personDto = this.personService.createPerson( );
-        
-        userDto = this.userDao.findByPersonId( personDto ) ;
-        
-        if ( userDto != null ){
-            if ( userDto.getRole().equals( "INVITADO" ) ){
-                return userDto;
-            }
-            else{
-                return null;
-            }
-        }
-        
-        userDto = new UserDto();
-        userDto.setPersonnId( Helper.parse( personDto ) );
-        
-        userDto.getUserNameDto();
-        userDto.setRole( "INVITADO" );
-        userDto.getUserPasswordDto();
-                
-        if ( this.userDao.existsByUserName( userDto ) ) {
-            throw new Exception("Ya existe un usuario con ese user name");
-        }
-        
-        try {
-            this.userDao.createUser( userDto );
-        } catch (SQLException e) {
-            throw new Exception( e.getMessage() );
-        }
-        
-        userDto = this.userDao.findByUserName( userDto ) ;
-        return userDto;
-    }
    
     
 }

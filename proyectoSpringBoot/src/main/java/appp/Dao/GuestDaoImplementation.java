@@ -6,6 +6,7 @@ import app.Dto.GuestDto;
 import app.Dto.UserDto;
 import app.Model.Guest;
 import app.helpers.Helper;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,17 +36,26 @@ public class GuestDaoImplementation implements GuestDao {
 
     @Override
     public void updateGuest(GuestDto guestDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Guest guest = Helper.parse(guestDto);
+        guestRepository.save(guest);
     }
 
     @Override
-    public void deleteGuest(GuestDto guestDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void deleteGuest( long id) throws Exception {// se cambio GuestDto guesDto
+         guestRepository.deleteById(id); 
     }
 
     @Override
     public GuestDto findByUserId(UserDto userDto) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
+    public List<GuestDto> getAllGuest() {
+        
+        List<Guest> guests = guestRepository.findAll();
+        return Helper.parseGuests(guests); 
+        
     }
         
        

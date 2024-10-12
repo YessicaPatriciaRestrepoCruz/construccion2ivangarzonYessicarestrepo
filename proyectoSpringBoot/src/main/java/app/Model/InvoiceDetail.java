@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter // verificar todos los nombres deben ser igual a la tabla 
 @Setter
 @Entity
-@Table(name= "Invoicedetail") 
+@Table(name= "invoicedetail") 
 
 public class InvoiceDetail {
     

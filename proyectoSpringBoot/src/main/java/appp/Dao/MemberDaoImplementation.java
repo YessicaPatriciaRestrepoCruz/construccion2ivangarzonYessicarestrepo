@@ -6,6 +6,7 @@ import app.Dto.MemberDto;
 import app.Dto.UserDto;
 import app.Model.Member;
 import app.helpers.Helper;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,10 @@ import org.springframework.stereotype.Service;
     public MemberDto findMemberById(long id) throws Exception {
         
          Member member = memberRepository.findMemberById(id);// revisar memberDto
+         
+         if (member == null) {
+        throw new Exception("Miembro no encontrado con ID " + id);
+    }
         return Helper.parse(member);
     }
 
@@ -40,7 +45,11 @@ import org.springframework.stereotype.Service;
     public void updateMember(MemberDto memberDto) throws Exception {
         
         Member member = Helper.parse(memberDto);//verificar helper
+      if (member == null) {
+        throw new Exception("Miembro no encontrado con ID " + memberDto.getId());
+    }
         memberRepository.save(member);
+        
     }
 
     @Override
@@ -51,9 +60,14 @@ import org.springframework.stereotype.Service;
      
     }
 
-    public MemberDto findByUserId(UserDto userDtoInvite) {
+    @Override
+    public List<MemberDto> getAllMember() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+   
+
+    
 }
     
 

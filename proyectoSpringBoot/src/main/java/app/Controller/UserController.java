@@ -1,14 +1,12 @@
 package app.Controller;
 
-import app.Dto.PersonDto;
 import app.Dto.UserDto;
 import app.service.Interface.UserServiceInterface;
-import app.service.PersonService;
-import app.service.UserService;
 import java.util.Scanner;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -25,7 +23,11 @@ public class UserController implements ControllerInterface {
                                         "3. Borrar usuario\n" +
                                         "4. Cerrar sesión.";
 
-    private UserService userService = new UserService();
+ @Autowired
+    private UserServiceInterface userService;
+ 
+ private Scanner scanner = new Scanner(System.in);
+    
     
     @Override
     public void session() throws Exception {
@@ -50,14 +52,15 @@ public class UserController implements ControllerInterface {
     private boolean options(String option) throws Exception {
         switch (option) {
             case "1":
-               // createUser();
-                return true;
+               
+                return createUser();
+                
             case "2":
-               // updateUser();
-                return true;
+               
+                return updateUser();
             case "3":
-               // deleteUser();
-                return true;
+               
+                return deleteUser();
             case "4":
                 System.out.println("Se ha cerrado sesión.");
                 return false;
@@ -66,6 +69,73 @@ public class UserController implements ControllerInterface {
                 return true;
         }
     }
+    
+    private boolean createUser() {
+        Scanner scanner = new Scanner(System.in);
+        UserDto newUser = new UserDto();
 
+        try {
+            System.out.println("Ingrese el ID del usuario:");
+            newUser.setId(Long.valueOf(scanner.nextLine()));
+
+            System.out.println("Ingrese el nombre de usuario:");
+            newUser.setUserName(scanner.nextLine());
+
+            System.out.println("Ingrese la contraseña:");
+            newUser.setPassword(scanner.nextLine());
+
+            System.out.println("Ingrese el rol:");
+            newUser.setRole(scanner.nextLine());
+
+            userService.createUser(newUser);
+            System.out.println("Usuario creado exitosamente.");
+        } catch (Exception e) {
+            System.out.println("Error al crear usuario: " + e.getMessage());
+        }
+
+        return true;
+    }
+
+    private boolean updateUser() {
+        Scanner scanner = new Scanner(System.in);
+        UserDto updatedUser = new UserDto();
+
+        try {
+            System.out.println("Ingrese el ID del usuario a actualizar:");
+            updatedUser.setId(Long.valueOf(scanner.nextLine()));
+
+            System.out.println("Ingrese el nuevo nombre de usuario:");
+            updatedUser.setUserName(scanner.nextLine());
+
+            System.out.println("Ingrese la nueva contraseña:");
+            updatedUser.setPassword(scanner.nextLine());
+
+            System.out.println("Ingrese el nuevo rol:");
+            updatedUser.setRole(scanner.nextLine());
+
+            userService.updateUser(updatedUser);
+            System.out.println("Usuario actualizado exitosamente.");
+        } catch (Exception e) {
+            System.out.println("Error al actualizar usuario: " + e.getMessage());
+        }
+
+        return true;
+    }
+
+    private boolean deleteUser() {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Ingrese el ID del usuario a borrar:");
+            long id = Long.parseLong(scanner.nextLine());
+
+            userService.deleteUser(id);
+            System.out.println("Usuario borrado exitosamente.");
+        } catch (Exception e) {
+            System.out.println("Error al borrar usuario: " + e.getMessage());
+        }
+
+        return true;
+    }
     
 }

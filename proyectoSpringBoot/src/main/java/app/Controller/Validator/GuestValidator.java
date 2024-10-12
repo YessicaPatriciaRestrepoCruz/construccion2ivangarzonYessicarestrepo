@@ -1,6 +1,8 @@
 
 package app.Controller.Validator;
 
+import app.Model.Member;
+import app.Model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,34 +13,25 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 public class GuestValidator extends CommonsValidator {
-    public void validateName(String name) throws Exception {
-        isValidString("Name", name);
+   
+public void validateStatus(String status) throws Exception {
+        isValidString("Status", status);
     }
+  
 
-    public long validateId(String id) throws Exception {
-        return isValidLong("ID", id);
-    }
-
-    public void validateCellNumber(String cellNumber) throws Exception {
-        if (cellNumber.length() != 10) {
-            throw new Exception("Cell number must be exactly 10 digits");
-        }
-        if (!cellNumber.matches("\\d+")) {
-            throw new Exception("Cell number must contain only digits");
+    public void validateUser(User user) throws Exception {
+        if (user == null || user.getId() == null) {
+            throw new Exception("El usuario debe ser válido.");
         }
     }
-
-    public void validateUserName(String userName) throws Exception {
-        isValidString("Username", userName);
-    }
-
-    public void validatePassword(String password) throws Exception {
-        isValidString("Password", password);
-    }
-
-    public long validateHostId(String hostId) throws Exception {
-        return isValidLong("Host ID", hostId);
+    
+    public void validateMember(Member member) throws Exception {
+        if (member == null || member.getId() == null) {
+            throw new Exception("El miembro debe ser válido.");
+        }
     }
 }
+    
+
 
 
