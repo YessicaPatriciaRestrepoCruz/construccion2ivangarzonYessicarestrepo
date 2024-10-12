@@ -34,5 +34,11 @@ public abstract class CommonsValidator {
 			throw new Exception(element + " debe ser un valor valido");
 		}
 	}
+        
+         protected void isValidPositive(String fieldName, double value) throws Exception {
+        if (value <= 0) {
+            throw new Exception(fieldName + " debe ser mayor que cero.");
+        }
+    }
 }
 

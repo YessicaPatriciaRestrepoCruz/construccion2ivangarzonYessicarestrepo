@@ -115,7 +115,7 @@ public abstract class Helper {
      
       public static InvoiceDetail parse(InvoiceDetailDto invoiceDetailDto) {
 		InvoiceDetail invoiceDetail = new InvoiceDetail();
-		invoiceDetail.setInvoiceId(invoiceDetailDto.getInvoiceId());// revisar
+		//invoiceDetail.setInvoiceId(invoiceDetailDto.getInvoiceId());// revisar problema con la relacion 
                 invoiceDetail.setAmount(invoiceDetail.getAmount());
                 invoiceDetail.setDescription(invoiceDetail.getDescription());
                 invoiceDetail.setItem(invoiceDetail.getItem());
@@ -125,18 +125,31 @@ public abstract class Helper {
 	}
     
      public static InvoiceDetailDto parse( InvoiceDetail invoiceDetail ) {
-                InvoiceDetailDto invoiceDetailDto = new InvoiceDetailDto();
-                invoiceDetailDto.setInvoiceId(invoiceDetail.getInvoiceId());
-                invoiceDetailDto.setAmount(invoiceDetail.getAmount());
-                invoiceDetailDto.setDescription(invoiceDetail.getDescription());
-                invoiceDetailDto.setItem(invoiceDetail.getItem()); 
-                
-                return invoiceDetailDto; 
+             InvoiceDetailDto invoiceDetailDto = new InvoiceDetailDto();
+    
+    if (invoiceDetail.getInvoice() != null) {
+        invoiceDetailDto.setInvoiceId(invoiceDetail.getInvoice().getId());
+    } else {
+        throw new IllegalArgumentException("El detalle de la factura no tiene un encabezado de factura asociado.");
+    }
+    
+    invoiceDetailDto.setAmount(invoiceDetail.getAmount());
+    invoiceDetailDto.setDescription(invoiceDetail.getDescription());
+    invoiceDetailDto.setItem(invoiceDetail.getItem()); 
+    
+    return invoiceDetailDto;  
 }
      
      
      public static List<GuestDto> parseGuests(List<Guest> guests) {
         return guests.stream()
+                     .map(Helper::parse)
+                     .collect(Collectors.toList());
+    }
+
+    public static List<InvoiceDto> parseInvoices(List<Invoice> invoices) {
+       
+        return invoices.stream()
                      .map(Helper::parse)
                      .collect(Collectors.toList());
     }

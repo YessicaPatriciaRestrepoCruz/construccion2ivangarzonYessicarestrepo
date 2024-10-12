@@ -2,6 +2,7 @@
 package app.service;
 
 
+import app.Controller.Validator.InvoiceValidator;
 import app.Dao.Interfaces.InvoiceDao;
 import app.Dto.InvoiceDto;
 import app.service.Interface.InvoiceServiceInterface;
@@ -17,27 +18,39 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Service
 public class InvoiceService implements InvoiceServiceInterface {
+    
+    
+    @Autowired
+    private InvoiceValidator invoiceValidator;
     @Autowired 
-
     private InvoiceDao invoiceDao;
 
+    
     public InvoiceDto getInvoiceById(long id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
+         return invoiceDao.findInvoiceById(id);
     }
 
     public List<InvoiceDto> getAllInvoices() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        return invoiceDao.findAllInvoices();
     }
 
     public void updateInvoice(InvoiceDto invoiceDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        invoiceValidator.validateAmount(invoiceDto.getAmount());
+        invoiceValidator.validateStatus(invoiceDto.getStatus());
+        invoiceDao.updateInvoice(invoiceDto);
     }
 
     public void deleteInvoice(long id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        invoiceDao.deleteInvoice(id);
     }
 
     public void createInvoice(InvoiceDto invoiceDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        invoiceValidator.validateAmount(invoiceDto.getAmount());
+        invoiceValidator.validateStatus(invoiceDto.getStatus());
+        invoiceDao.createInvoice(invoiceDto);
     }
 }// Guardar la factura en el sistema

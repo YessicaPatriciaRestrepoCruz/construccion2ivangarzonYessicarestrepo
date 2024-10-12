@@ -6,6 +6,7 @@ import app.Dao.repository.InvoiceDetailRepository;
 import app.Dto.InvoiceDetailDto;
 import app.Model.InvoiceDetail;
 import app.helpers.Helper;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,12 +29,7 @@ public class InvoiceDetailDaoImplementation implements InvoiceDetailDao  {
         invoiceDetailRepository.save(invoiceDetail);
     }
 
-    @Override
-    public InvoiceDetailDto findInvoiceDetailById(InvoiceDetailDto invoiceDetailDto) throws Exception {
-        
-        InvoiceDetail invoiceDetail = invoiceDetailRepository.findInvoiceDetailById(invoiceDetailDto.getId());
-        return Helper.parse(invoiceDetail);
-    }
+   
 
     @Override
     public void updateInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws Exception {
@@ -44,11 +40,22 @@ public class InvoiceDetailDaoImplementation implements InvoiceDetailDao  {
     }
 
     @Override
-    public void deleteInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws Exception {
-         
-        InvoiceDetail invoiceDetail = Helper.parse(invoiceDetailDto);
-        invoiceDetailRepository.delete(invoiceDetail);
+    public void deleteInvoiceDetail(long id) throws Exception {
+        invoiceDetailRepository.deleteById(id);
     }
+
+    @Override
+    public InvoiceDetailDto getInvoiceDetailById(long id) throws Exception {
+       InvoiceDetail invoiceDetail = invoiceDetailRepository.findById(id).orElseThrow(() -> new Exception("Detalle de factura no encontrado"));
+        return Helper.parse(invoiceDetail);
+    }
+
+    @Override
+    public List<InvoiceDetailDto> getDetailsByInvoiceId(long invoiceId) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+   
 
    
     

@@ -28,6 +28,9 @@ public class AdminController implements ControllerInterface {
     @Autowired
     private GuestController guestController;
     
+    @Autowired
+    private GuestController invoiceController;
+    
     
    
     private static final String MENU = "Bienvenido al Sistema de Gestión del Club \n" +
@@ -36,7 +39,8 @@ public class AdminController implements ControllerInterface {
                                         "2. Gestion de Usurio \n" +
                                         "3. Gestion de Socios\n" +
                                         "4. Gestion de Invitados\n" +
-                                        "5. Cerrar sesión.";
+                                        "5. Gestion de facturacion \n" +
+                                        "6. Cerrar sesión.";
 
 
 
@@ -75,8 +79,12 @@ public class AdminController implements ControllerInterface {
             case "4":
                 guestController.session();
                 return true;
-            
             case "5":
+                
+                invoiceController.session();
+                return true;
+            
+            case "6":
                 System.out.println("Se ha cerrado sesión.");
                 return false;
             default:

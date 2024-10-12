@@ -24,12 +24,13 @@ public class InvoiceDetail {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
-
     private Long id;
-    @JoinColumn(name = "invoiceId")
-      @ManyToOne
-
-    private Long invoiceId; //long
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "invoiceId", nullable= false)
+    private Invoice invoice; 
+    
      @Column(name = "item")
 
     private int item;
