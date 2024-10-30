@@ -3,6 +3,8 @@ package app.Dao.Interfaces;
 
 import app.Dto.PersonDto;
 import app.Dto.UserDto;
+import java.sql.SQLException;
+import java.util.List;
 
 public interface UserDao {
     
@@ -13,5 +15,6 @@ public interface UserDao {
    public UserDto findUserById ( long id)throws Exception;
  public void deleteUser(Long id) throws Exception;
    public UserDto findByPersonId( PersonDto personDto ) throws Exception;
+   List<UserDto> findAllUsers();
    
 }

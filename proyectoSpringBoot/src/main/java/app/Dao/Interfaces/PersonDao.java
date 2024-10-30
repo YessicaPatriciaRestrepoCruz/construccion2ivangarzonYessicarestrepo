@@ -1,6 +1,7 @@
 
 package app.Dao.Interfaces;
 import app.Dto.PersonDto;
+import java.util.List;
 
 public interface PersonDao {
 	  
@@ -9,4 +10,5 @@ public interface PersonDao {
   public void updatePerson(PersonDto personDto) throws Exception;
    public void deletePerson(PersonDto personDto) throws Exception;
    public boolean existsByDocument (PersonDto personDto) throws Exception;
+   List<PersonDto> findAllPersons();
 }

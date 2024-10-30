@@ -1,4 +1,4 @@
-package appp.Dao;
+package app.Dao;
 
 
 import app.Dao.Interfaces.PersonDao;
@@ -6,6 +6,7 @@ import app.Dao.repository.PersonRepository;
 import app.Dto.PersonDto;
 import app.helpers.Helper;
 import app.Model.Person;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +25,7 @@ public class PersonDaoImplementation implements PersonDao {
     @Override
     public boolean existsByDocument(PersonDto personDto) throws Exception {
 
-        return personRepository.existsByDocuemnt(personDto.getDocument());
+        return personRepository.existsByDocument(personDto.getDocument());
     }
 
     @Override
@@ -57,6 +58,12 @@ public class PersonDaoImplementation implements PersonDao {
     public void updatePerson(PersonDto personDto) throws Exception {
         Person person = Helper.parse(personDto);
         personRepository.save(person);
+    }
+    
+     @Override
+    public List<PersonDto> findAllPersons() {
+        List<Person> persons = personRepository.findAll(); 
+        return Helper.parseToPersonDtoList(persons); 
     }
 
 }

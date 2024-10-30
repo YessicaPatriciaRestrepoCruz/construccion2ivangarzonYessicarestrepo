@@ -10,4 +10,7 @@ public interface PersonServiceInterface {
     public void updatePerson(PersonDto personDto) throws Exception;
     public void deletePerson(long id) throws Exception;
     public  PersonDto createPerson() throws Exception;
+    List<PersonDto> findAllPersons(); 
+    List<PersonDto> getAllPersons();
+    
 }

@@ -1,174 +1,89 @@
 package app.Controller;
 
 
+import app.Controller.Request.CreateGuestRequest;
 import app.Dto.GuestDto;
-import app.Model.Member;
-import app.Model.User;
 import app.service.Interface.GuestServiceInterface;
 import java.util.List;
-import java.util.Scanner;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController 
 @Setter
 @Getter
 @NoArgsConstructor
 
-public class GuestController implements ControllerInterface {
-    
-    private static final String MENU = "Ingrese la opción que desea \n" +
-                                        "1. crear invitado. \n" +
-                                        "2. modificar invitado. \n" +
-                                        "3. borrar invitado. \n" +
-                                         "4. borrar invitado. \n" +
-                                        "5. Para cerrar sesión.";
+@RequestMapping("/guests")
+
+public class GuestController {
     
      
     @Autowired
     private GuestServiceInterface guestService;
-
-    @Override
-    public void session() throws Exception {
-        boolean session = true;
-        while (session) {
-            session = menu();
-        }
-    }
-
-    private boolean menu() {
+  
+ @PostMapping
+    public ResponseEntity<String> createGuest(@RequestBody CreateGuestRequest request) {
+        GuestDto guestDto = new GuestDto();
         try {
-            System.out.println("Bienvenido");
-            System.out.println(MENU);
-            String option = Utils.getReader().nextLine();
-            return options(option);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
-    }
+            guestDto.setId(request.getId());
+            guestDto.setUserId(request.getUserId());
+            guestDto.setMemberId(request.getMemberId());
+            guestDto.setStatus(request.getStatus());
 
-    private boolean options(String option) throws Exception {
-        switch (option) {
-            case "1":
-                
-                return createGuest();
-                
-             case "2":
-                
-                return updateGuest();
-                
-            case "3":
-                
-                return deleteGuest();
-            
-            case "4":
-                
-                return listGuests();
-                
-            case "5":
-                System.out.println("Se ha cerrado sesión.");
-                return false;
-            default:
-                System.out.println("Opción inválida.");
-                return true;
+            guestService.createGuest(guestDto);
+            return new ResponseEntity<>("Invitado creado exitosamente.", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
     
-    
-    private boolean createGuest() {
-        Scanner scanner = new Scanner(System.in);
-        GuestDto newGuest = new GuestDto();
-
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateGuest(@PathVariable Long id, @RequestBody CreateGuestRequest request) {
+        GuestDto guestDto = new GuestDto();
         try {
-            System.out.println("Ingrese el ID del invitado:");
-            newGuest.setId(Long.valueOf(scanner.nextLine()));
+            guestDto.setId(id); // Asignar ID desde la URL
+            guestDto.setUserId(request.getUserId());
+            guestDto.setMemberId(request.getMemberId());
+            guestDto.setStatus(request.getStatus());
 
-            System.out.println("Ingrese el ID del usuario asociado:");
-            User user = new User(); 
-            user.setId(Long.valueOf(scanner.nextLine()));
-            newGuest.setUserId(user);
-
-            System.out.println("Ingrese el ID del miembro asociado:");
-            Member member = new Member(); //objeto
-            member.setId(Long.valueOf(scanner.nextLine()));
-            newGuest.setMemberId(member);
-
-            System.out.println("Ingrese el estado del invitado:");
-            newGuest.setStatus(scanner.nextLine());
-
-            guestService.createGuest(newGuest);
-            System.out.println("Invitado creado exitosamente.");
+            guestService.updateGuest(guestDto);
+            return new ResponseEntity<>("Invitado actualizado exitosamente.", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al crear invitado: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return true;
     }
+       
 
-    private boolean updateGuest() {
-        Scanner scanner = new Scanner(System.in);
-        GuestDto updatedGuest = new GuestDto();
-
+@DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGuest(@PathVariable Long id) {
         try {
-            System.out.println("Ingrese el ID del invitado a actualizar:");
-            updatedGuest.setId(Long.valueOf(scanner.nextLine()));
-
-            System.out.println("Ingrese el nuevo ID del usuario asociado:");
-            User user = new User(); 
-            user.setId(Long.valueOf(scanner.nextLine()));
-            updatedGuest.setUserId(user);
-
-            System.out.println("Ingrese el nuevo ID del miembro asociado:");
-            Member member = new Member(); 
-            member.setId(Long.valueOf(scanner.nextLine()));
-            updatedGuest.setMemberId(member);
-
-            System.out.println("Ingrese el nuevo estado del invitado:");
-            updatedGuest.setStatus(scanner.nextLine());
-
-            guestService.updateGuest(updatedGuest);
-            System.out.println("Invitado actualizado exitosamente.");
-        } catch (Exception e) {
-            System.out.println("Error al actualizar invitado: " + e.getMessage());
-        }
-
-        return true;
-    }
-
-    private boolean deleteGuest() {
-        Scanner scanner = new Scanner(System.in);
-
-        try {
-            System.out.println("Ingrese el ID del invitado a borrar:");
-            long id = Long.parseLong(scanner.nextLine());
-
             guestService.deleteGuest(id);
-            System.out.println("Invitado borrado exitosamente.");
+            return new ResponseEntity<>("Invitado borrado exitosamente.", HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            System.out.println("Error al borrar invitado: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        return true;
     }
 
-    private boolean listGuests() {
+     @GetMapping
+    public ResponseEntity<List<GuestDto>> listGuests() {
         try {
             List<GuestDto> guests = guestService.getAllGuests();
-            if (guests.isEmpty()) {
-                System.out.println("No hay invitados registrados.");
-            } else {
-                for (GuestDto guest : guests) {
-                    System.out.println(guest);
-                }
-            }
+            return new ResponseEntity<>(guests, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al listar invitados: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return true;
-    }
+}
 }
 

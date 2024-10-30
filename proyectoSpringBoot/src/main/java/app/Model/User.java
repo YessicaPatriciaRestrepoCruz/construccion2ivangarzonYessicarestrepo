@@ -27,7 +27,7 @@ public class User {
     private Long id;
     @JoinColumn(name="personid")//foranea 
     @OneToOne //relacion
-    private Long personId; //private Person personid
+    private Person personId; //private Person personid
     @Column(name = "username")
     private String username;
     @Column(name = "password")

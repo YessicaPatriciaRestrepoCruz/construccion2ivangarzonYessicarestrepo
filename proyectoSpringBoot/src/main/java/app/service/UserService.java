@@ -3,20 +3,18 @@ package app.service;
  
 import app.Controller.Validator.UserValidator;
 import app.Dao.Interfaces.UserDao;
-import app.Dto.MemberDto;
-import app.Dto.PersonDto;
 import app.Dto.UserDto;
-import app.helpers.Helper;
-import app.service.Interface.UserServiceInterface;
-import appp.Dao.MemberDaoImplementation;
-import appp.Dao.PersonDaoImplementation;
-import appp.Dao.UserDaoImplementation;
 
+import app.service.Interface.UserServiceInterface;
+import app.Dao.MemberDaoImplementation;
+import app.Dao.PersonDaoImplementation;
 import java.sql.SQLException;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 @Getter
 @Setter
@@ -68,6 +66,20 @@ public class UserService implements UserServiceInterface {
     public UserDto getUserById(Long id) throws Exception {
         return userDao.findUserById(id);
 
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        
+        try {
+        return userDao.findAllUsers(); 
+    } catch (DataAccessException e) {
+        throw new RuntimeException("Error al obtener la lista de usuarios: " + e.getMessage(), e);
+    } catch (Exception e) {
+        throw new RuntimeException("Error inesperado: " + e.getMessage(), e);
+    }
+        
+       
     }
     
     

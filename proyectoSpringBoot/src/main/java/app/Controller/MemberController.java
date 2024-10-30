@@ -1,166 +1,95 @@
 package app.Controller;
 
+import app.Controller.Request.CreateMemberRequest;
 import app.Dto.MemberDto;
 import app.service.Interface.MemberServiceInterface;
-
-import java.sql.Date;
 import java.util.List;
-import java.util.Scanner;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+
+
+@RestController
+@RequestMapping("/members")
 @Setter
 @Getter
 @NoArgsConstructor
-// falta de valitador para poner @Autowired 
 
-public class MemberController implements ControllerInterface {
+
+public class MemberController  { //quitar implements?
     
-    private static final String MENU = "Ingrese la opcion que desea \n"+
-                                        "1. Crear socio  \n" +
-                                        "2. actualizar socio \n" +
-                                        "3. borrar socio \n"+
-                                        "4. lista de miembros \n"+
-                                        "4. cerrar sesión.";
     @Autowired
     
     private MemberServiceInterface memberService;
   
     
-    @Override
-    public void session() throws Exception {
-        boolean session = true;
-        while (session) {
-            session = menu();
-        }
-    }
-
-    private boolean menu() {
+   @PostMapping
+    // public ResponseEntity<String> createMember(@RequestBody CreateUserRequest request) {
+   
+    private ResponseEntity createMember(@RequestBody CreateMemberRequest request) throws Exception {
+        
+        MemberDto newMember = new MemberDto();
         try {
-            System.out.println("Bienvenido, ");
-            System.out.println(MENU);
-            String option = Utils.getReader().nextLine();
-            return options(option);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
-    }
+        newMember.setId(request.getId());
+        newMember.setType(request.getType());
+        newMember.setAmount(request.getAmount());
+        newMember.setAffiliationDate(request.getAffiliationDate());
 
-    private boolean options(String option) throws Exception {
-        switch (option) {
-            case "1":
-                
-             return createMember();
-                
-            case "2":
-               
-                return updateMember();
-            case "3":
-               
-                return deleteMember();
-                
-            case "4":
-               
-                return listMembers();
-            case "5":
-                System.out.println("Se ha cerrado sesión.");
-                return false;
-            default:
-                System.out.println("Opción inválida.");
-                return true;
-        }
+        memberService.createMember(newMember);
+        System.out.println("Socio creado exitosamente.");
+        return new ResponseEntity<>("se ha creado el usuario exitosamente",HttpStatus.OK);
+    } catch (Exception e) {
+        
+      return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    }
     }
     
-    private boolean createMember() {
-        Scanner scanner = new Scanner(System.in);
-        MemberDto newMember = new MemberDto();
-
+    
+    @PutMapping("/{id}") // preguntar funcion 
+    public ResponseEntity<String> updateMember(@PathVariable Long id, @RequestBody CreateMemberRequest request) {
         try {
-            System.out.println("Ingrese el ID del socio:");
-            newMember.setId(Long.parseLong(scanner.nextLine()));
-
-            System.out.println("Ingrese el tipo de socio:");
-            newMember.setType(scanner.nextLine());
-
-            System.out.println("Ingrese el monto:");
-            newMember.setAmount(Double.parseDouble(scanner.nextLine()));
-            
-            System.out.println("Ingrese la fecha de afiliación (YYYY-MM-DD):");
-            newMember.setAffiliationDate(Date.valueOf(scanner.nextLine()));
-
-            memberService.createMember(newMember); // revisar este dirigido a???
-            System.out.println("Socio creado exitosamente.");
-            
-        } catch (Exception e) {
-            System.out.println("Error al crear socio: " + e.getMessage());
-        }
-
-        return true;
-    }
-
-    private boolean updateMember() {
-        Scanner scanner = new Scanner(System.in);
-        MemberDto updatedMember = new MemberDto();
-
-        try {
-            System.out.println("Ingrese el ID del socio a actualizar:");
-            updatedMember.setId(Long.parseLong(scanner.nextLine()));
-
-            System.out.println("Ingrese el nuevo tipo de socio:");
-            updatedMember.setType(scanner.nextLine());
-           
-            
-            System.out.println("Ingrese el nuevo monto:");
-            updatedMember.setAmount(Double.parseDouble(scanner.nextLine()));
-            
-            
-            System.out.println("Ingrese la nueva fecha de afiliación (YYYY-MM-DD):");
-            updatedMember.setAffiliationDate(Date.valueOf(scanner.nextLine()));
-
+            MemberDto updatedMember = new MemberDto();
+            updatedMember.setId(id);
+            updatedMember.setType(request.getType());
+            updatedMember.setAmount(request.getAmount());
+            updatedMember.setAffiliationDate(request.getAffiliationDate());
             memberService.updateMember(updatedMember);
-            System.out.println("Socio actualizado exitosamente.");
+            return new ResponseEntity<>("Socio actualizado exitosamente.", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al actualizar socio: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return true;
     }
 
-    private boolean deleteMember() {
-        Scanner scanner = new Scanner(System.in);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMember(@PathVariable Long id) {
         try {
-            System.out.println("Ingrese el ID del socio a borrar:");
-            long id = Long.parseLong(scanner.nextLine());
-
             memberService.deleteMember(id);
-            System.out.println("Socio borrado exitosamente.");
+            return new ResponseEntity<>("Socio borrado exitosamente.", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al borrar socio: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        return true;
     }
 
-    private boolean listMembers() {
+    @GetMapping
+    public ResponseEntity<List<MemberDto>> listMembers() {
         try {
             List<MemberDto> members = memberService.getAllMembers();
-            if (members.isEmpty()) {
-                System.out.println("No hay socios registrados.");
-            } else {
-                for (MemberDto member : members) {
-                    System.out.println(member); //  toString()dto
-                }
-            }
+            return new ResponseEntity<>(members, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al listar socios: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return true;
     }
 }
     

@@ -27,7 +27,7 @@ public class Member{
     
     @JoinColumn(name = "userId")
     @OneToOne
-    private Long userId;
+    private User userId;
     @Column(name = "amount")
     private double amount;
     @Column(name = "type")

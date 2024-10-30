@@ -1,21 +1,20 @@
 package app.Dto;
 
+import app.Model.User;
 import java.sql.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Getter // verificar todos los nombres deben ser igual a la tabla 
+@Getter 
 @Setter
 public class MemberDto {
     private long id;
-    private Long userId;
+    private User userId;
     private double amount;
     private String type;
     private Date affiliationDate;
-
-    // cambiar las variables comoe sta en la tabla
     
    
 }

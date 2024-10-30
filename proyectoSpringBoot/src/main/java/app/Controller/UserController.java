@@ -1,141 +1,85 @@
 package app.Controller;
 
+import app.Controller.Request.CreateUserRequest;
 import app.Dto.UserDto;
 import app.service.Interface.UserServiceInterface;
-import java.util.Scanner;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController 
 @Setter
 @Getter
 @NoArgsConstructor
 
 
-public class UserController implements ControllerInterface {
-    
-    private static final String MENU = "Gestión de usuario\n" +
-                                        "1. Crear usuario\n" +
-                                        "2. Actualizar usuario\n" +
-                                        "3. Borrar usuario\n" +
-                                        "4. Cerrar sesión.";
+public class UserController {    
 
  @Autowired
     private UserServiceInterface userService;
  
- private Scanner scanner = new Scanner(System.in);
-    
-    
-    @Override
-    public void session() throws Exception {
-        boolean session = true;
-        while (session) {
-            session = menu();
-        }
-    }
-
-    private boolean menu() {
+ @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequest request) {
+        UserDto userDto = new UserDto();
         try {
-            System.out.println("Bienvenido");
-            System.out.println(MENU);
-            String option = Utils.getReader().nextLine();
-            return options(option);
+            userDto.setId(request.getId());
+            userDto.setUserName(request.getUsername());
+            userDto.setPassword(request.getPassword());
+            userDto.setRole(request.getRole());
+
+            userService.createUser(userDto);
+            return new ResponseEntity<>("Usuario creado exitosamente.", HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return true;
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private boolean options(String option) throws Exception {
-        switch (option) {
-            case "1":
-               
-                return createUser();
-                
-            case "2":
-               
-                return updateUser();
-            case "3":
-               
-                return deleteUser();
-            case "4":
-                System.out.println("Se ha cerrado sesión.");
-                return false;
-            default:
-                System.out.println("Opción inválida.");
-                return true;
-        }
-    }
-    
-    private boolean createUser() {
-        Scanner scanner = new Scanner(System.in);
-        UserDto newUser = new UserDto();
-
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest request) {
+        UserDto userDto = new UserDto();
         try {
-            System.out.println("Ingrese el ID del usuario:");
-            newUser.setId(Long.valueOf(scanner.nextLine()));
+            userDto.setId(id); 
+            userDto.setUserName(request.getUsername());
+            userDto.setPassword(request.getPassword());
+            userDto.setRole(request.getRole());
 
-            System.out.println("Ingrese el nombre de usuario:");
-            newUser.setUserName(scanner.nextLine());
-
-            System.out.println("Ingrese la contraseña:");
-            newUser.setPassword(scanner.nextLine());
-
-            System.out.println("Ingrese el rol:");
-            newUser.setRole(scanner.nextLine());
-
-            userService.createUser(newUser);
-            System.out.println("Usuario creado exitosamente.");
+            userService.updateUser(userDto);
+            return new ResponseEntity<>("Usuario actualizado exitosamente.", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error al crear usuario: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return true;
     }
 
-    private boolean updateUser() {
-        Scanner scanner = new Scanner(System.in);
-        UserDto updatedUser = new UserDto();
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
-            System.out.println("Ingrese el ID del usuario a actualizar:");
-            updatedUser.setId(Long.valueOf(scanner.nextLine()));
-
-            System.out.println("Ingrese el nuevo nombre de usuario:");
-            updatedUser.setUserName(scanner.nextLine());
-
-            System.out.println("Ingrese la nueva contraseña:");
-            updatedUser.setPassword(scanner.nextLine());
-
-            System.out.println("Ingrese el nuevo rol:");
-            updatedUser.setRole(scanner.nextLine());
-
-            userService.updateUser(updatedUser);
-            System.out.println("Usuario actualizado exitosamente.");
-        } catch (Exception e) {
-            System.out.println("Error al actualizar usuario: " + e.getMessage());
-        }
-
-        return true;
-    }
-
-    private boolean deleteUser() {
-        Scanner scanner = new Scanner(System.in);
-
-        try {
-            System.out.println("Ingrese el ID del usuario a borrar:");
-            long id = Long.parseLong(scanner.nextLine());
-
             userService.deleteUser(id);
-            System.out.println("Usuario borrado exitosamente.");
+            return new ResponseEntity<>("Usuario borrado exitosamente.", HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            System.out.println("Error al borrar usuario: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        return true;
     }
-    
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> listUsers() {
+        try {
+            List<UserDto> users = userService.getAllUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+  
+   
 }

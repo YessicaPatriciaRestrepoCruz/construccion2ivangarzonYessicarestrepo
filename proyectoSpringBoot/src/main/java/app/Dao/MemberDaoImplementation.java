@@ -1,4 +1,4 @@
-package appp.Dao;
+package app.Dao;
 
 import app.Dao.Interfaces.MemberDao;
 import app.Dao.repository.MemberRepository;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
     @Override
     public MemberDto findMemberById(long id) throws Exception {
         
-         Member member = memberRepository.findMemberById(id);// revisar memberDto
+         Member member = memberRepository.findById(id);// revisar memberDto
          
          if (member == null) {
         throw new Exception("Miembro no encontrado con ID " + id);
@@ -56,7 +56,7 @@ import org.springframework.stereotype.Service;
     public void deleteMember(MemberDto memberDto) throws Exception {
         
         Member member = Helper.parse(memberDto);
-        memberRepository.deleteMember(member.getId());
+        memberRepository.delete(member);
      
     }
 

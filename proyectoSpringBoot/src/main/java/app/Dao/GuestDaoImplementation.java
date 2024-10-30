@@ -1,4 +1,4 @@
-package appp.Dao;
+package app.Dao;
 
 import app.Dao.Interfaces.GuestDao;
 import app.Dao.repository.GuestRepository;

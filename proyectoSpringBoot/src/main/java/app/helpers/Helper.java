@@ -16,6 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 public abstract class Helper {
 
+    
+    public static List<PersonDto> parseToPersonDtoList(List<Person> persons) {
+    return persons.stream()
+            .map(Helper::parse)
+            .collect(Collectors.toList());
+}
 	
 	public static Person parse(PersonDto personDto) {
 		Person person = new Person();
@@ -57,7 +63,7 @@ public abstract class Helper {
     public static Member parse(MemberDto memberDto) {
                 Member member = new Member();
                 member.setId(memberDto.getId());
-   
+                member.setUserId( memberDto.getUserId() );
                 member.setAmount(memberDto.getAmount());
                 member.setType(memberDto.getType());
                 member.setAffiliationDate(memberDto.getAffiliationDate());

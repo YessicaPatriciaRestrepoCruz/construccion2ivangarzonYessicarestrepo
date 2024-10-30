@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Controller;
  */
 
 
-@Controller
+@RestController 
 @Setter
 @Getter
 @NoArgsConstructor

@@ -1,10 +1,14 @@
 package app.service;
 
 import app.Controller.Utils;
+import app.Dao.repository.PersonRepository;
 import app.Dto.PersonDto;
+import app.Model.Person;
+import app.helpers.Helper;
 import app.service.Interface.PersonServiceInterface;
-import appp.Dao.PersonDaoImplementation;
-import appp.Dao.UserDaoImplementation;
+import app.Dao.PersonDaoImplementation;
+import app.Dao.UserDaoImplementation;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +20,10 @@ import org.springframework.stereotype.Service;
 @Service
 
 public class PersonService implements PersonServiceInterface {
+    
+    @Autowired
+    private PersonRepository personRepository;
+
     
     @Autowired
     private PersonDaoImplementation personDao = new PersonDaoImplementation();
@@ -77,11 +85,21 @@ public PersonDto createPerson() throws Exception {
         } catch (Exception e) {
             throw new Exception("Error deleting person: " + e.getMessage(), e);
         }
-    } //revisar funcionamiento
-
-     
-
     }
+    
+   @Override
+    public List<PersonDto> findAllPersons() {
+        
+        List<Person> persons = personRepository.findAll(); 
+        return Helper.parseToPersonDtoList(persons); 
+    }
+    
+    @Override
+    public List<PersonDto> getAllPersons() {
+        List<Person> persons = personRepository.findAll(); 
+        return Helper.parseToPersonDtoList(persons); 
+    }
+}
     
     
 

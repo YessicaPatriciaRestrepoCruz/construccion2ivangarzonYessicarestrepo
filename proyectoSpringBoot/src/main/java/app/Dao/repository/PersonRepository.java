@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonRepository extends JpaRepository< Person,Long>{
 
-    public boolean existsByDocuemnt(long document);
+    public boolean existsByDocument(long document);
 
     public Person findByDocument(long document);
 

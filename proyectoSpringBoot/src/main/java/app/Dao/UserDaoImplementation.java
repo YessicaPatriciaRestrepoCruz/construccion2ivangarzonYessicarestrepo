@@ -1,4 +1,4 @@
-package appp.Dao;
+package app.Dao;
 
 
 import app.Dao.Interfaces.UserDao;
@@ -9,6 +9,8 @@ import app.Model.Person;
 
 import app.helpers.Helper;
 import app.Model.User;
+import java.sql.SQLException;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +34,7 @@ public class UserDaoImplementation implements UserDao {
     @Override
     public UserDto findUserByUserName(UserDto userDto) throws Exception {
         
-       User user  = userRepository.findUserByUserName(userDto.getUserName());
+       User user  = userRepository.findUserByUsername(userDto.getUserName());
        return Helper.parse(user);
     }
     
@@ -60,7 +62,7 @@ public UserDto findUserById(long id) throws Exception {
     @Override
     public UserDto findByPersonId( PersonDto personDto ) throws Exception {
         Person person = Helper.parse( personDto );
-        User user = this.userRepository.findByPersonnId( person );
+        User user = this.userRepository.findByPersonId( person );
         return Helper.parse( user );
 
     }
@@ -73,6 +75,13 @@ public UserDto findUserById(long id) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+public List<UserDto> findAllUsers() {
+    List<User> users = userRepository.findAll(); // Usa el método findAll del repositorio
+    return users.stream()
+                 .map(Helper::parse)
+                 .toList();
+}
    
 
   

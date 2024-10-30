@@ -1,5 +1,5 @@
 
-package appp.Dao;
+package app.Dao;
 
 import app.Dao.Interfaces.InvoiceDetailDao;
 import app.Dao.repository.InvoiceDetailRepository;
