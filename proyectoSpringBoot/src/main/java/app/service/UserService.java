@@ -8,7 +8,6 @@ import app.Dto.UserDto;
 import app.service.Interface.UserServiceInterface;
 import app.Dao.MemberDaoImplementation;
 import app.Dao.PersonDaoImplementation;
-import java.sql.SQLException;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

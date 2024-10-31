@@ -4,6 +4,7 @@ package app.Controller;
 import app.Controller.Request.CreateGuestRequest;
 import app.Dto.GuestDto;
 import app.service.Interface.GuestServiceInterface;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,7 +54,7 @@ public class GuestController {
     public ResponseEntity<String> updateGuest(@PathVariable Long id, @RequestBody CreateGuestRequest request) {
         GuestDto guestDto = new GuestDto();
         try {
-            guestDto.setId(id); // Asignar ID desde la URL
+            guestDto.setId(id);
             guestDto.setUserId(request.getUserId());
             guestDto.setMemberId(request.getMemberId());
             guestDto.setStatus(request.getStatus());
@@ -76,13 +77,13 @@ public class GuestController {
         }
     }
 
-     @GetMapping
+     @GetMapping("/")
     public ResponseEntity<List<GuestDto>> listGuests() {
         try {
             List<GuestDto> guests = guestService.getAllGuests();
             return new ResponseEntity<>(guests, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
 }

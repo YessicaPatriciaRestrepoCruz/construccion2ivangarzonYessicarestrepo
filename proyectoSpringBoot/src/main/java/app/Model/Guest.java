@@ -27,11 +27,11 @@ public class Guest {
     @Column(name = "id")
 
     private Long id;  //user
-     @JoinColumn(name = "userId")
+     @JoinColumn(name = "userid")
      @OneToOne
 
     private User userId; //member
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "partnerid")
     @ManyToOne
 
     private Member memberId;

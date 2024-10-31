@@ -2,11 +2,16 @@
 package app.Controller.Validator;
 
 import app.Dto.InvoiceDetailDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 
-/**
- *
- * @author Yessica
- */
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Component
 public class InvoiceDetailValidator extends CommonsValidator {
     
     

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface InvoiceRepository extends JpaRepository < Invoice,Long > {
     
     public List<Invoice> findByPersonId(Person person);
-    public List<Invoice> findByPartnerId(Member member);
+    public List<Invoice> findByMemberId(Member member);
     public Invoice findInvoiceById(Long id);
     
 }

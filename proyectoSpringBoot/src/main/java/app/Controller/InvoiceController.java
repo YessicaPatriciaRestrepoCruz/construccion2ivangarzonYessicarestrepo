@@ -1,4 +1,3 @@
-
 package app.Controller;
 
 import app.Controller.Request.CreateInvoiceDetailRequest;
@@ -149,6 +148,3 @@ public ResponseEntity<String> createInvoice(@RequestBody CreateInvoiceRequest re
 }
   
          
-    
-
-
