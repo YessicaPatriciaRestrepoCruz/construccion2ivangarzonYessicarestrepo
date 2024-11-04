@@ -7,9 +7,10 @@ import java.util.List;
 public interface GuestDao {
    
     void createGuest(GuestDto guestDto) throws Exception;
-    GuestDto findGuestById(GuestDto guestDto) throws Exception;
+    GuestDto findGuestById(Long id) throws Exception;
     void updateGuest(GuestDto guestDto) throws Exception;
-    void deleteGuest(long id) throws Exception;// se cambio parametro
+    void deleteGuest(long id) throws Exception;
     public GuestDto findByUserId( UserDto userDto ) throws Exception;
-    List<GuestDto> getAllGuest() throws Exception;// falta implementar lista
+    List<GuestDto> getAllGuest() throws Exception;
+    GuestDto getGuestById(long id) throws Exception;
 }

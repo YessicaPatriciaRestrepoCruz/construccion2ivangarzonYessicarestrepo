@@ -29,17 +29,19 @@ public class UserService implements UserServiceInterface {
     private UserValidator userValidator;
     
      @Autowired
-    private final PersonService personService = new PersonService();
+    private PersonService personService;;
      
     @Autowired
-    private final PersonDaoImplementation personDao = new PersonDaoImplementation();
+    private PersonDaoImplementation personDao;
     @Autowired
-  
-    
-    private final MemberDaoImplementation memberDao = new MemberDaoImplementation();
+     private MemberDaoImplementation memberDao;
 
     @Override
     public void createUser(UserDto userDto) throws Exception {
+        
+         if (userDto == null) {
+            throw new IllegalArgumentException("UserDto no puede ser nulo");
+        }
         
         userValidator.validateUserName(userDto.getUserName());
         userValidator.validatePassword(userDto.getPassword());
@@ -50,6 +52,10 @@ public class UserService implements UserServiceInterface {
     @Override
     public void updateUser(UserDto userDto) throws Exception {
         
+        if (userDto == null) {
+            throw new IllegalArgumentException("UserDto no puede ser nulo");
+        }
+        
         userValidator.validateUserName(userDto.getUserName());
         userValidator.validatePassword(userDto.getPassword());
         userValidator.validateRole(userDto.getRole());
@@ -58,6 +64,10 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public void deleteUser(Long id) throws Exception {
+        
+        if (id == null) {
+            throw new IllegalArgumentException("ID no puede ser nulo");
+        }
          userDao.deleteUser(id);
     }
 

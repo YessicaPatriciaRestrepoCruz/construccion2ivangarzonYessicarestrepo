@@ -1,4 +1,3 @@
-
 package app.service;
 
 
@@ -26,28 +25,40 @@ public class InvoiceService implements InvoiceServiceInterface {
     private InvoiceDao invoiceDao;
 
     
+    @Override
     public InvoiceDto getInvoiceById(long id) throws Exception {
        
          return invoiceDao.findInvoiceById(id);
     }
 
+    @Override
     public List<InvoiceDto> getAllInvoices() throws Exception {
         
         return invoiceDao.findAllInvoices();
     }
 
+    @Override
     public void updateInvoice(InvoiceDto invoiceDto) throws Exception {
         
+        if (invoiceDto == null) {
+            throw new IllegalArgumentException("InvoiceDto no puede ser nulo");
+        }
         invoiceValidator.validateAmount(invoiceDto.getAmount());
         invoiceValidator.validateStatus(invoiceDto.getStatus());
         invoiceDao.updateInvoice(invoiceDto);
     }
 
+    @Override
     public void deleteInvoice(long id) throws Exception {
         invoiceDao.deleteInvoice(id);
     }
 
+    @Override
     public void createInvoice(InvoiceDto invoiceDto) throws Exception {
+        
+        if (invoiceDto == null) {
+            throw new IllegalArgumentException("InvoiceDto no puede ser nulo");
+        }
         
         invoiceValidator.validateAmount(invoiceDto.getAmount());
         invoiceValidator.validateStatus(invoiceDto.getStatus());

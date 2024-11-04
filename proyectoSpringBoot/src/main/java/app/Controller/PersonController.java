@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PersonController{
     
     @Autowired                       
-    private PersonService personService = new PersonService();
+   private PersonService personService;
     
     @PostMapping
     public ResponseEntity<String> createPerson(@RequestBody CreatePersonRequest request) {
@@ -76,12 +76,15 @@ public class PersonController{
 
     @GetMapping
     public ResponseEntity<List<PersonDto>> listPersons() {
-        try {
-            List<PersonDto> persons = personService.getAllPersons();
-            return new ResponseEntity<>(persons, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+         try {
+        List<PersonDto> persons = personService.getAllPersons();
+        if (persons.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
         }
+        return new ResponseEntity<>(persons, HttpStatus.OK); 
+    } catch (Exception e) {
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
     }
 
 }

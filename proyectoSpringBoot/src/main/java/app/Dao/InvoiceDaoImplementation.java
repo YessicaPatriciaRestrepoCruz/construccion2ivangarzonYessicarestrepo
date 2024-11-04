@@ -40,7 +40,7 @@ public class InvoiceDaoImplementation implements InvoiceDao {
     @Override
     public void updateInvoice(InvoiceDto invoiceDto) throws Exception {
         
-        Invoice invoice = Helper.parse(invoiceDto);//verificar helper
+        Invoice invoice = Helper.parse(invoiceDto);
         invoiceRepository.save(invoice);
     }
 

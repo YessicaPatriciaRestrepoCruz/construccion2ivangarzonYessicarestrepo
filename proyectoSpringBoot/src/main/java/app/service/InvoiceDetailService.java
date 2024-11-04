@@ -1,4 +1,3 @@
-
 package app.service;
 
 import app.Controller.Validator.InvoiceDetailValidator;
@@ -33,18 +32,29 @@ public class InvoiceDetailService implements InvoiceDetailServiceInterface {
     @Override
     public void createInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws Exception {
         
+        if (invoiceDetailDto == null) {
+            throw new IllegalArgumentException("InvoiceDetailDto no puede ser nulo");
+        }
+        
         invoiceDetailValidator.validate(invoiceDetailDto); 
         invoiceDetailDao.createInvoiceDetail(invoiceDetailDto);
     }
 
     @Override
     public void updateInvoiceDetail(InvoiceDetailDto invoiceDetailDto) throws Exception {
+        
+        if (invoiceDetailDto == null) {
+            throw new IllegalArgumentException("InvoiceDetailDto no puede ser nulo");
+        }
         invoiceDetailValidator.validate(invoiceDetailDto);
         invoiceDetailDao.updateInvoiceDetail(invoiceDetailDto);
     }
 
     @Override
     public void deleteInvoiceDetail(long id) throws Exception {
+        
+        
+        
         invoiceDetailDao.deleteInvoiceDetail(id);
     }
 

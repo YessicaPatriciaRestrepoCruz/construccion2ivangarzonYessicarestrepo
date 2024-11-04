@@ -3,10 +3,10 @@ package app.Dao;
 import app.Dao.Interfaces.MemberDao;
 import app.Dao.repository.MemberRepository;
 import app.Dto.MemberDto;
-import app.Dto.UserDto;
 import app.Model.Member;
 import app.helpers.Helper;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
     @Override
     public MemberDto findMemberById(long id) throws Exception {
         
-         Member member = memberRepository.findById(id);// revisar memberDto
+         Member member = memberRepository.findById(id);
          
          if (member == null) {
         throw new Exception("Miembro no encontrado con ID " + id);
@@ -44,7 +44,7 @@ import org.springframework.stereotype.Service;
     @Override
     public void updateMember(MemberDto memberDto) throws Exception {
         
-        Member member = Helper.parse(memberDto);//verificar helper
+        Member member = Helper.parse(memberDto);
       if (member == null) {
         throw new Exception("Miembro no encontrado con ID " + memberDto.getId());
     }
@@ -55,6 +55,10 @@ import org.springframework.stereotype.Service;
     @Override
     public void deleteMember(MemberDto memberDto) throws Exception {
         
+        if (!memberRepository.existsById(memberDto.getId())) {
+            throw new Exception("Miembro no encontrado con ID " + memberDto.getId());
+        }
+        
         Member member = Helper.parse(memberDto);
         memberRepository.delete(member);
      
@@ -62,11 +66,12 @@ import org.springframework.stereotype.Service;
 
     @Override
     public List<MemberDto> getAllMember() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
+        List<Member> members = memberRepository.findAll();
+        return members.stream()
+                .map(Helper::parse) // Usa el método de conversión
+                .collect(Collectors.toList());
     }
-
-   
-
     
 }
     

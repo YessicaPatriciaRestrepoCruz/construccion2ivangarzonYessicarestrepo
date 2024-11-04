@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Service
 public class GuestDaoImplementation implements GuestDao {
-    
+        
     @Autowired 
     
         GuestRepository guestRepository;
@@ -30,8 +31,10 @@ public class GuestDaoImplementation implements GuestDao {
     }//revisar
 
     @Override
-    public GuestDto findGuestById(GuestDto guestDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public GuestDto findGuestById(Long id) throws Exception {
+       return guestRepository.findById(id)
+                .map(Helper::parse)
+                .orElseThrow(() -> new Exception("Invitado no encontrado con ID: " + id));
     }
 
     @Override
@@ -47,15 +50,26 @@ public class GuestDaoImplementation implements GuestDao {
 
     @Override
     public GuestDto findByUserId(UserDto userDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        Guest guest = guestRepository.findByUserId(Helper.parse(userDto));
+    if (guest == null) {
+        throw new Exception("Invitado no encontrado para el usuario con ID: " + userDto.getId());
+    }
+    return Helper.parse(guest);
     }
 
     
+    @Override
     public List<GuestDto> getAllGuest() {
         
         List<Guest> guests = guestRepository.findAll();
         return Helper.parseGuests(guests); 
         
+    }
+    
+    @Override
+    public GuestDto getGuestById(long id) throws Exception {
+         return findGuestById(id);  
     }
         
        

@@ -36,9 +36,8 @@ public class MemberController  { //quitar implements?
   
     
    @PostMapping
-    // public ResponseEntity<String> createMember(@RequestBody CreateUserRequest request) {
    
-    private ResponseEntity createMember(@RequestBody CreateMemberRequest request) throws Exception {
+    public ResponseEntity createMember(@RequestBody CreateMemberRequest request) throws Exception {
         
         MemberDto newMember = new MemberDto();
         try {
@@ -83,14 +82,17 @@ public class MemberController  { //quitar implements?
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberDto>> listMembers() {
-        try {
-            List<MemberDto> members = memberService.getAllMembers();
-            return new ResponseEntity<>(members, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+   public ResponseEntity<List<MemberDto>> listMembers() {
+    try {
+        List<MemberDto> members = memberService.getAllMembers();
+        if (members.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
         }
+        return new ResponseEntity<>(members, HttpStatus.OK); 
+    } catch (Exception e) {
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); 
     }
+}
 }
     
 

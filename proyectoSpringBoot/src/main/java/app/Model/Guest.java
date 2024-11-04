@@ -37,9 +37,8 @@ public class Guest {
     private Member memberId;
     @Column(name = "status")//verificar nombre, si tiene que ser igual 
 
-    private String Status; 
-   
-    
+    private String status; 
+      
 }
 
 

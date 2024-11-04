@@ -36,17 +36,25 @@ public class UserDaoImplementation implements UserDao {
     public UserDto findUserByUserName(UserDto userDto) throws Exception {
         
        User user  = userRepository.findUserByUsername(userDto.getUserName());
+       
+        if (user == null) {
+            throw new Exception("Usuario no encontrado con nombre: " + userDto.getUserName());
+        }
        return Helper.parse(user);
     }
     
     @Override
     public void updateUser(UserDto userDto) throws Exception {
-        User user = Helper.parse(userDto) ;//verificar helper
+        User user = Helper.parse(userDto) ;
         userRepository.save(user);
     }
 
     @Override
     public void deleteUser( Long id) throws Exception {
+        
+        if (!userRepository.existsById(id)) {
+            throw new Exception("Usuario no encontrado con ID: " + id);
+        }
         
         userRepository.deleteById(id);
         
@@ -56,6 +64,10 @@ public class UserDaoImplementation implements UserDao {
 public UserDto findUserById(long id) throws Exception {
 
     User user = userRepository.findUserById(id);
+    
+    if (user == null) {
+            throw new Exception("Usuario no encontrado con ID: " + id);
+        }
     return Helper.parse(user);
     
 }
@@ -64,21 +76,26 @@ public UserDto findUserById(long id) throws Exception {
     public UserDto findByPersonId( PersonDto personDto ) throws Exception {
         Person person = Helper.parse( personDto );
         User user = this.userRepository.findByPersonId( person );
+        
+        if (user == null) {
+            throw new Exception("Usuario no encontrado para la persona con ID: " + person.getId());
+        }
         return Helper.parse( user );
 
     }
 
     public boolean existsByUserName(UserDto userDto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userRepository.existsByUsername(userDto.getUserName());
     }
 
     public UserDto findByUserName(UserDto userDto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        User user = userRepository.findUserByUsername(userDto.getUserName());
+        return Helper.parse(user);
     }
 
     @Override
 public List<UserDto> findAllUsers() {
-    List<User> users = userRepository.findAll(); // Usa el método findAll del repositorio
+    List<User> users = userRepository.findAll(); 
     return users.stream()
                  .map(Helper::parse)
                  .toList();

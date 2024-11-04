@@ -1,4 +1,3 @@
-
 package app.Dao;
 
 import app.Dao.Interfaces.InvoiceDetailDao;
@@ -41,12 +40,17 @@ public class InvoiceDetailDaoImplementation implements InvoiceDetailDao  {
 
     @Override
     public void deleteInvoiceDetail(long id) throws Exception {
+        
+           if (!invoiceDetailRepository.existsById(id)) {
+            throw new Exception("Detalle de factura no encontrado.");
+        }
         invoiceDetailRepository.deleteById(id);
     }
 
     @Override
     public InvoiceDetailDto getInvoiceDetailById(long id) throws Exception {
-       InvoiceDetail invoiceDetail = invoiceDetailRepository.findById(id).orElseThrow(() -> new Exception("Detalle de factura no encontrado"));
+       InvoiceDetail invoiceDetail = invoiceDetailRepository.findById(id)
+               .orElseThrow(() -> new Exception("Detalle de factura no encontrado"));
         return Helper.parse(invoiceDetail);
     }
 

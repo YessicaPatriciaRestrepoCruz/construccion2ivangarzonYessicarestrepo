@@ -1,5 +1,4 @@
 package app.service;
-
 import app.Controller.Validator.MemberValidator;
 import app.Dao.Interfaces.MemberDao;
 import app.Dto.MemberDto;
@@ -25,6 +24,10 @@ public class MemberService implements MemberServiceInterface {
 
 @Override
  public void createMember(MemberDto memberDto) throws Exception {
+     
+        if (memberDto == null) {
+            throw new IllegalArgumentException("MemberDto no puede ser nulo");
+        }
      
          if (memberDao.findMemberById(memberDto.getId()) != null) {
             throw new Exception("El miembro con ID " + memberDto.getId() + " ya existe.");
@@ -54,6 +57,10 @@ public class MemberService implements MemberServiceInterface {
 
     @Override
     public void updateMember(MemberDto memberDto) throws Exception {
+        
+        if (memberDto == null) {
+            throw new IllegalArgumentException("MemberDto no puede ser nulo");
+        }
      
         MemberDto existingMember = memberDao.findMemberById(memberDto.getId());
         if (existingMember == null) {

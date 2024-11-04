@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter // verificar todos los nombres deben ser igual a la tabla 
 @Setter
 @Entity
-@Table(name= "parthner")//revisar nombre
+@Table(name= "partner")//revisar nombre
 public class Member{
     
     @Id

@@ -73,12 +73,15 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> listUsers() {
-        try {
-            List<UserDto> users = userService.getAllUsers();
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+         try {
+        List<UserDto> users = userService.getAllUsers();
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
         }
+        return new ResponseEntity<>(users, HttpStatus.OK); 
+    } catch (Exception e) {
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     }
   
    

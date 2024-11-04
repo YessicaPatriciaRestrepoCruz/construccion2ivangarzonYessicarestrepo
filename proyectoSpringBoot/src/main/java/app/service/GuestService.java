@@ -24,30 +24,34 @@ import org.springframework.stereotype.Service;
 public class GuestService implements GuestServiceInterface {
 
     @Autowired
-    private final UserDaoImplementation userDao = new UserDaoImplementation();
+     private UserDaoImplementation userDao;
     
      @Autowired
-    private final InvoiceDaoImplementation invoiceDao = new InvoiceDaoImplementation();
+     private InvoiceDaoImplementation invoiceDao;
      
     @Autowired
-    private final PersonDaoImplementation personDao = new PersonDaoImplementation();
+     private PersonDaoImplementation personDao;
     
     @Autowired
-    private final GuestDaoImplementation guestDao = new GuestDaoImplementation();
+    private GuestDaoImplementation guestDao;
     
     @Autowired
-    private final UserService userService = new UserService();
+    private UserService userService;
     
      @Autowired
     private GuestValidator guestValidator;
     
     @Autowired
-    private final MemberDaoImplementation memberDao = new MemberDaoImplementation();
+     private MemberDaoImplementation memberDao;
     
     
        
          @Override
     public void createGuest(GuestDto guestDto) throws Exception {
+        
+        if (guestDto == null) {
+            throw new IllegalArgumentException("GuestDto no puede ser nulo");
+        }
         
         guestValidator.validateUser(guestDto.getUserId());
         guestValidator.validateMember(guestDto.getMemberId());
@@ -64,6 +68,10 @@ public class GuestService implements GuestServiceInterface {
     
     @Override
     public void updateGuest(GuestDto guestDto) throws Exception {
+        
+        if (guestDto == null) {
+            throw new IllegalArgumentException("GuestDto no puede ser nulo");
+        }
         guestValidator.validateUser(guestDto.getUserId());
         guestValidator.validateMember(guestDto.getMemberId());
         guestValidator.validateStatus(guestDto.getStatus());
@@ -73,7 +81,12 @@ public class GuestService implements GuestServiceInterface {
 
     @Override
     public GuestDto getGuestById(long id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        GuestDto guest = guestDao.getGuestById(id);
+    if (guest == null) {
+        throw new Exception("Invitado no encontrado con ID: " + id);
+    }
+    return guest;
     }
 
     @Override

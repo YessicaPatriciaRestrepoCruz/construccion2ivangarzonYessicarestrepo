@@ -1,4 +1,3 @@
-
 package app.Controller.Request;
 
 import app.Model.Member;
@@ -14,8 +13,8 @@ import lombok.Setter;
 public class CreateGuestRequest {
     
     private Long Id;
-    private Member memberId;//Long
-    private User userId;//Long
+    private Member memberId;
+    private User userId;
     private String Status; 
     
     

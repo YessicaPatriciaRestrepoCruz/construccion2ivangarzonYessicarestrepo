@@ -43,6 +43,10 @@ public class PersonDaoImplementation implements PersonDao {
 
     @Override
     public void deletePerson(PersonDto personDto) throws Exception {
+        
+         if (!personRepository.existsById(personDto.getId())) {
+            throw new Exception("Persona no encontrada con ID " + personDto.getId());
+        }
         Person person = Helper.parse(personDto);
         personRepository.delete(person);
 
@@ -56,6 +60,10 @@ public class PersonDaoImplementation implements PersonDao {
 
     @Override
     public void updatePerson(PersonDto personDto) throws Exception {
+        
+        if (!personRepository.existsById(personDto.getId())) {
+            throw new Exception("Persona no encontrada con ID " + personDto.getId());
+        }
         Person person = Helper.parse(personDto);
         personRepository.save(person);
     }
